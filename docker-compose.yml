@@ -1,0 +1,45 @@
+services:
+
+  postgres:
+    image: postgis/postgis:17-3.5
+    container_name: waze_agua_postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - waze_network
+
+
+  redis:
+    image: redis:8-alpine
+    container_name: waze_agua_redis
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+    networks:
+      - waze_network
+
+
+volumes:
+  postgres_data:
+  redis_data:
+
+
+networks:
+  waze_network:
+    driver: bridge
